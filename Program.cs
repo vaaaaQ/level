@@ -36,7 +36,7 @@ app.UseHttpsRedirection();
 app.MapGet("/", () => Results.Ok(new { message = "Level trading webhook receiver" }));
 
 // GET-based webhook example: /open?type=long&asset=BTCUSDT&size=0.001&stop=0.2&take=0.8
-app.MapGet("/open", async (string type, string asset, decimal size, decimal? stop, decimal? take, IBybitTradingService tradingService) =>
+app.MapPost("/open", async (string type, string asset, decimal size, decimal? stop, decimal? take, IBybitTradingService tradingService) =>
 {
     var req = new TradingViewOrderRequest
     {
