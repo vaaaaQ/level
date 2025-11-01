@@ -1,0 +1,93 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v10.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v10.0": {
+      "level/1.0.0": {
+        "dependencies": {
+          "Bybit.Net": "5.11.0",
+          "Microsoft.AspNetCore.OpenApi": "10.0.0-rc.2.25502.107"
+        },
+        "runtime": {
+          "level.dll": {}
+        }
+      },
+      "Bybit.Net/5.11.0": {
+        "dependencies": {
+          "CryptoExchange.Net": "9.10.0"
+        },
+        "runtime": {
+          "lib/net9.0/Bybit.Net.dll": {
+            "assemblyVersion": "5.11.0.0",
+            "fileVersion": "5.11.0.0"
+          }
+        }
+      },
+      "CryptoExchange.Net/9.10.0": {
+        "runtime": {
+          "lib/net9.0/CryptoExchange.Net.dll": {
+            "assemblyVersion": "9.10.0.0",
+            "fileVersion": "9.10.0.0"
+          }
+        }
+      },
+      "Microsoft.AspNetCore.OpenApi/10.0.0-rc.2.25502.107": {
+        "dependencies": {
+          "Microsoft.OpenApi": "2.0.0"
+        },
+        "runtime": {
+          "lib/net10.0/Microsoft.AspNetCore.OpenApi.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.25.50307"
+          }
+        }
+      },
+      "Microsoft.OpenApi/2.0.0": {
+        "runtime": {
+          "lib/net8.0/Microsoft.OpenApi.dll": {
+            "assemblyVersion": "2.0.0.0",
+            "fileVersion": "2.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "level/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Bybit.Net/5.11.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-IrQD9BKqAt18u0Wbknf/s2/aaPBx6k4uzSx4NgAeBCUWIfBBlPLy66xlYcDlAMxf2rbcJ8V3bV6xLjZar56Ulg==",
+      "path": "bybit.net/5.11.0",
+      "hashPath": "bybit.net.5.11.0.nupkg.sha512"
+    },
+    "CryptoExchange.Net/9.10.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-grpV3clRM1R8eMp2KdhEoByFBAhpZF2V5CcgR/C0Kxzv9GsgVGTX6ZGsm2+Hww9XL1NRotAY9bQ9nudJHz/EAA==",
+      "path": "cryptoexchange.net/9.10.0",
+      "hashPath": "cryptoexchange.net.9.10.0.nupkg.sha512"
+    },
+    "Microsoft.AspNetCore.OpenApi/10.0.0-rc.2.25502.107": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-50Egznb0tgVvITuuQQhhQ2fCQqKsy+I7Cy2QopLZziDw/IRhvM+L5ZKA7AdsEr4x/lmuB0HnZPKjD8eRjkbVog==",
+      "path": "microsoft.aspnetcore.openapi/10.0.0-rc.2.25502.107",
+      "hashPath": "microsoft.aspnetcore.openapi.10.0.0-rc.2.25502.107.nupkg.sha512"
+    },
+    "Microsoft.OpenApi/2.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-GGYLfzV/G/ct80OZ45JxnWP7NvMX1BCugn/lX7TH5o0lcVaviavsLMTxmFV2AybXWjbi3h6FF1vgZiTK6PXndw==",
+      "path": "microsoft.openapi/2.0.0",
+      "hashPath": "microsoft.openapi.2.0.0.nupkg.sha512"
+    }
+  }
+}
