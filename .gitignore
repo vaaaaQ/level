@@ -403,5 +403,6 @@ FodyWeavers.xsd
 appsettings.json
 appsettings.*.json
 !appsettings.Example.json
-obj/*
-bin/*
+obj/
+bin/
+obj/Debug/
