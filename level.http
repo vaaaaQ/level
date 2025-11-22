@@ -4,3 +4,17 @@ GET {{level_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+
+# TradingView Webhook Notification Endpoint
+POST {{level_HostAddress}}/webhook/notify
+Content-Type: application/json
+
+{
+  "instrument": "BTCUSDT",
+  "timeframe": "1H",
+  "action": "BUY",
+  "price": 42150.50,
+  "signal": "Golden Cross"
+}
+
+###

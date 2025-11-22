@@ -20,8 +20,14 @@ builder.Services.AddBybit(options =>
     }
 });
 
+// Bind Telegram options from configuration
+builder.Services.Configure<TelegramOptions>(builder.Configuration.GetSection(TelegramOptions.SectionName));
+
 // Register trading service (implementation uses Bybit.Net internally)
 builder.Services.AddScoped<IBybitTradingService, BybitTradingService>();
+
+// Register Telegram notification service
+builder.Services.AddHttpClient<ITelegramNotificationService, TelegramNotificationService>();
 
 var app = builder.Build();
 
@@ -74,5 +80,34 @@ app.MapPost("/webhook/open", async (TradingViewOrderRequest req, IBybitTradingSe
 
     return Results.Ok(new { result.Message, result.OrderId });
 }).WithName("OpenPositionPost");
+
+// Webhook endpoint for TradingView notifications with Telegram alerts
+app.MapPost("/webhook/notify", async (TradingViewWebhookRequest req, ITelegramNotificationService telegramService) =>
+{
+    var ctx = new ValidationContext(req);
+    var results = new List<ValidationResult>();
+    if (!Validator.TryValidateObject(req, ctx, results, true))
+        return Results.BadRequest(results);
+
+    var message = $"📊 <b>TradingView Alert</b>\n\n" +
+                  $"🔹 <b>Instrument:</b> {req.Instrument}\n" +
+                  $"🕒 <b>Timeframe:</b> {req.Timeframe}";
+
+    if (!string.IsNullOrEmpty(req.Action))
+        message += $"\n⚡ <b>Action:</b> {req.Action}";
+
+    if (req.Price.HasValue)
+        message += $"\n💰 <b>Price:</b> {req.Price.Value}";
+
+    if (!string.IsNullOrEmpty(req.Signal))
+        message += $"\n📡 <b>Signal:</b> {req.Signal}";
+
+    var sent = await telegramService.SendNotificationAsync(message);
+    
+    if (!sent)
+        return Results.Problem("Failed to send Telegram notification");
+
+    return Results.Ok(new { message = "Notification sent successfully" });
+}).WithName("TradingViewNotify");
 
 app.Run();
