@@ -5,16 +5,44 @@ Accept: application/json
 
 ###
 
-# TradingView Webhook Notification Endpoint
+# TradingView Webhook Notification Endpoint - Default Template
 POST {{level_HostAddress}}/webhook/notify
 Content-Type: application/json
 
 {
   "instrument": "BTCUSDT",
-  "timeframe": "1H",
-  "action": "BUY",
-  "price": 42150.50,
-  "signal": "Golden Cross"
+  "timeframe": "1D",
+  "price": 100,
+  "comment": "Затухание волатильности"
 }
 
 ###
+
+# TradingView Webhook Notification - Custom Template
+POST {{level_HostAddress}}/webhook/notify
+Content-Type: application/json
+
+{
+  "instrument": "ETHUSDT",
+  "timeframe": "4H",
+  "price": 2500.50,
+  "comment": "Пробой уровня сопротивления",
+  "template": "🚨 *АЛЕРТ*\n\n📊 *Инструмент:* {instrument}\n⏰ *Таймфрейм:* {timeframe}\n💵 *Цена:* ${price}\n\n💬 *Комментарий:*\n{comment}"
+}
+
+###
+
+# TradingView Webhook Notification - Minimal Template
+POST {{level_HostAddress}}/webhook/notify
+Content-Type: application/json
+
+{
+  "instrument": "SOLUSDT",
+  "timeframe": "1H",
+  "price": 150.75,
+  "comment": "Сигнал на покупку",
+  "template": "{instrument} | {timeframe} | ${price}\n{comment}"
+}
+
+###
+

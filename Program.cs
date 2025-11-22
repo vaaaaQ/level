@@ -29,6 +29,9 @@ builder.Services.AddScoped<IBybitTradingService, BybitTradingService>();
 // Register Telegram notification service
 builder.Services.AddHttpClient<ITelegramNotificationService, TelegramNotificationService>();
 
+// Register template service
+builder.Services.AddSingleton<ITemplateService, TemplateService>();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -82,25 +85,18 @@ app.MapPost("/webhook/open", async (TradingViewOrderRequest req, IBybitTradingSe
 }).WithName("OpenPositionPost");
 
 // Webhook endpoint for TradingView notifications with Telegram alerts
-app.MapPost("/webhook/notify", async (TradingViewWebhookRequest req, ITelegramNotificationService telegramService) =>
+app.MapPost("/webhook/notify", async (
+    TradingViewWebhookRequest req, 
+    ITelegramNotificationService telegramService,
+    ITemplateService templateService) =>
 {
     var ctx = new ValidationContext(req);
     var results = new List<ValidationResult>();
     if (!Validator.TryValidateObject(req, ctx, results, true))
         return Results.BadRequest(results);
 
-    var message = $"📊 <b>TradingView Alert</b>\n\n" +
-                  $"🔹 <b>Instrument:</b> {req.Instrument}\n" +
-                  $"🕒 <b>Timeframe:</b> {req.Timeframe}";
-
-    if (!string.IsNullOrEmpty(req.Action))
-        message += $"\n⚡ <b>Action:</b> {req.Action}";
-
-    if (req.Price.HasValue)
-        message += $"\n💰 <b>Price:</b> {req.Price.Value}";
-
-    if (!string.IsNullOrEmpty(req.Signal))
-        message += $"\n📡 <b>Signal:</b> {req.Signal}";
+    // Рендерим шаблон с данными из запроса
+    var message = templateService.RenderTemplate(req.Template, req);
 
     var sent = await telegramService.SendNotificationAsync(message);
     

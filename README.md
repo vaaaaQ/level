@@ -11,30 +11,68 @@
 ## Endpoints
 
 ### 1. `/webhook/notify` - Уведомления в Telegram
-Принимает вебхук от TradingView и отправляет уведомление в Telegram.
+Принимает вебхук от TradingView и отправляет уведомление в Telegram с поддержкой динамических шаблонов.
 
-**Пример запроса:**
+**Пример запроса (базовый):**
 ```json
 POST /webhook/notify
 Content-Type: application/json
 
 {
   "instrument": "BTCUSDT",
-  "timeframe": "1H",
-  "action": "BUY",
-  "price": 42150.50,
-  "signal": "Golden Cross"
+  "timeframe": "1D",
+  "price": 100,
+  "comment": "Затухание волатильности"
+}
+```
+
+**Пример запроса (с кастомным шаблоном):**
+```json
+POST /webhook/notify
+Content-Type: application/json
+
+{
+  "instrument": "ETHUSDT",
+  "timeframe": "4H",
+  "price": 2500.50,
+  "comment": "Пробой уровня сопротивления",
+  "template": "🚨 *АЛЕРТ*\n\n📊 *Инструмент:* {instrument}\n⏰ *Таймфрейм:* {timeframe}\n💵 *Цена:* ${price}\n\n💬 *Комментарий:*\n{comment}"
 }
 ```
 
 **Обязательные поля:**
 - `instrument` - торговый инструмент (например, BTCUSDT)
-- `timeframe` - таймфрейм (например, 1H, 15m, 4H)
+- `timeframe` - таймфрейм (например, 1H, 15m, 4H, 1D)
 
 **Опциональные поля:**
-- `action` - действие (BUY, SELL и т.д.)
 - `price` - цена
-- `signal` - название сигнала
+- `comment` - комментарий к сигналу
+- `template` - кастомный Markdown-шаблон для форматирования сообщения
+- `data` - дополнительные пользовательские поля в JSON формате
+
+**Шаблонизация:**
+
+Поле `template` поддерживает интерполяцию полей из тела запроса. Используйте фигурные скобки для вставки значений:
+- `{instrument}` - инструмент
+- `{timeframe}` - таймфрейм
+- `{price}` - цена
+- `{comment}` - комментарий
+
+**Стандартный шаблон (если `template` не указан):**
+```
+📊 *TradingView Alert*
+
+🔹 *Instrument:* {instrument}
+🕒 *Timeframe:* {timeframe}
+💰 *Price:* {price}
+💬 {comment}
+```
+
+**Форматирование Markdown:**
+- `*жирный текст*` - жирный
+- `_курсив_` - курсив
+- `` `код` `` - моноширинный шрифт
+- `\n` - перенос строки
 
 ### 2. `/webhook/open` - Открытие позиции
 Принимает вебхук и открывает позицию на Bybit.
@@ -91,14 +129,24 @@ Content-Type: application/json
 
 **URL:** `https://ваш-домен.com/webhook/notify`
 
-**Message (JSON):**
+**Message (JSON) - базовый вариант:**
 ```json
 {
   "instrument": "{{ticker}}",
   "timeframe": "{{interval}}",
-  "action": "{{strategy.order.action}}",
   "price": {{close}},
-  "signal": "Ваш сигнал"
+  "comment": "Сигнал: {{strategy.order.action}}"
+}
+```
+
+**Message (JSON) - с кастомным шаблоном:**
+```json
+{
+  "instrument": "{{ticker}}",
+  "timeframe": "{{interval}}",
+  "price": {{close}},
+  "comment": "Цена закрытия",
+  "template": "🔔 *Алерт*\n\n📈 {instrument} | {timeframe}\n💵 Цена: ${price}\n📝 {comment}"
 }
 ```
 
@@ -119,23 +167,34 @@ curl -X POST http://localhost:5280/webhook/notify \
   -H "Content-Type: application/json" \
   -d '{
     "instrument": "BTCUSDT",
-    "timeframe": "1H",
-    "action": "BUY",
-    "price": 42150.50,
-    "signal": "Test Signal"
+    "timeframe": "1D",
+    "price": 100,
+    "comment": "Затухание волатильности"
   }'
 ```
 
 ## Пример уведомления в Telegram
 
+**С базовым шаблоном:**
 ```
-📊 TradingView Alert
+📊 *TradingView Alert*
 
-🔹 Instrument: BTCUSDT
-🕒 Timeframe: 1H
-⚡ Action: BUY
-💰 Price: 42150.5
-📡 Signal: Golden Cross
+🔹 *Instrument:* BTCUSDT
+🕒 *Timeframe:* 1D
+💰 *Price:* 100
+💬 Затухание волатильности
+```
+
+**С кастомным шаблоном:**
+```
+🚨 *АЛЕРТ*
+
+📊 *Инструмент:* ETHUSDT
+⏰ *Таймфрейм:* 4H
+� *Цена:* $2500.50
+
+� *Комментарий:*
+Пробой уровня сопротивления
 ```
 
 ## Технологии

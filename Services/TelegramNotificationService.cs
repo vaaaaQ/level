@@ -34,7 +34,7 @@ public class TelegramNotificationService : ITelegramNotificationService
             {
                 chat_id = _options.ChatId,
                 text = message,
-                parse_mode = "HTML"
+                parse_mode = "Markdown"
             };
 
             var response = await _httpClient.PostAsJsonAsync(url, payload);
